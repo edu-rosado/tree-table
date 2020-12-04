@@ -24,6 +24,5 @@ class Command(BaseCommand):
         n22 = Node(parent=n2, text="n22")
         n22.save()
 
-        print(t1.print())
-
-        print(t1.findById(60))
+        n3 = Node(parent=t1.root, text="n3")
+        n3.save()
