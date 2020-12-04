@@ -1,6 +1,9 @@
 from pathlib import Path
 import datetime as dt
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,7 +15,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "client", "react-app", "build")
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'agylgu(307x1hnv7nhqe^lv1u#+dn#3)gljn@gf59n0dql@369'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
