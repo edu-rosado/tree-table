@@ -19,6 +19,16 @@ class Node(models.Model):
                 return res
         return None
 
+    def generateJson(self):
+        dic = {
+            "id": self.id,
+            "text": self.text,
+            "children": [],
+        }
+        for child in self.children.all():
+            dic["children"].append(child.generateJson())
+        return dic
+
     def __str__(self):
         return f"{self.text[:20]} <id:{self.id}>"
 
@@ -34,9 +44,11 @@ class TreeTable(models.Model):
     name = models.CharField(max_length=254)
     root = models.OneToOneField(
         Node,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,  # root should never be deleted unless the treetable is
         related_name="treeTable",
     )
+    # json only to send the data, the actual data is stored in Nodes and the TreeTable
+    jsonRepr = models.JSONField(null=True, default=None)
 
     @classmethod
     def create(cls, name):
@@ -47,6 +59,10 @@ class TreeTable(models.Model):
 
     def findById(self, nodeId):
         return self.root.findById(nodeId)
+
+    def generateJson(self):
+        # Called in the serializer
+        self.jsonRepr = self.root.generateJson()
 
     def __str__(self):
         return f"{self.name}"
