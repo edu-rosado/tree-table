@@ -6,7 +6,7 @@ from .models import TreeTable
 class TreeTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = TreeTable
-        fields = ('jsonRepr',)
+        fields = ('jsonRepr', 'name')
 
     def to_representation(self, instance):
         # json in assigned on the go and it's not even saved

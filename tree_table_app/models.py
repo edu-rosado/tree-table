@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.http.response import Http404
 
 
 class Node(models.Model):
@@ -49,16 +51,21 @@ class TreeTable(models.Model):
     )
     # json only to send the data, the actual data is stored in Nodes and the TreeTable
     jsonRepr = models.JSONField(null=True, default=None)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     @classmethod
-    def create(cls, name):
+    def create(cls, name, owner):
         root = Node(is_root=True, text="<root>")
         root.save()
-        instance = cls(name=name, root=root)
+        instance = cls(name=name, root=root, owner=owner)
         return instance
 
     def findById(self, nodeId):
-        return self.root.findById(nodeId)
+        res = self.root.findById(nodeId)
+        if res is None:
+            raise Http404
+        else:
+            return res
 
     def generateJson(self):
         # Called in the serializer
