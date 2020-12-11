@@ -125,7 +125,6 @@ STATICFILES_DIRS = [
     build_path,
     os.path.join(build_path, "static"),
 ]
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -135,11 +134,14 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': dt.timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': dt.timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': dt.timedelta(minutes=5000),
+    'REFRESH_TOKEN_LIFETIME': dt.timedelta(days=7000),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUDIENCE': None,

@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from ...models import TreeTable, Node
+from django.contrib.auth.models import User
 
 
 class Command(BaseCommand):
@@ -8,7 +9,8 @@ class Command(BaseCommand):
         TreeTable.objects.all().delete()
         # Node.objects.all().delete()
 
-        t1 = TreeTable.create(name="t1")
+        admin = User.objects.get(username="admin")
+        t1 = TreeTable.create(name="t1", owner=admin)
         t1.save()
 
         n1 = Node(parent=t1.root, text="n1")
@@ -23,3 +25,8 @@ class Command(BaseCommand):
 
         n3 = Node(parent=t1.root, text="n3")
         n3.save()
+
+        t2 = TreeTable.create(name="t2", owner=admin)
+        t2.save()
+        t2n1 = Node(parent=t2.root, text="t2n1")
+        t2n1.save()

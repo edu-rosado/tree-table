@@ -57,7 +57,11 @@ class TreeTable(models.Model):
     def create(cls, name, owner):
         root = Node(is_root=True, text="<root>")
         root.save()
-        instance = cls(name=name, root=root, owner=owner)
+        try:
+            owner_id = int(owner)
+            instance = cls(name=name, root=root, owner_id=owner_id)
+        except:
+            instance = cls(name=name, root=root, owner=owner)
         return instance
 
     def findById(self, nodeId):

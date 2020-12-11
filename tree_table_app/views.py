@@ -6,37 +6,42 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-from .models import TableTree, Node, TreeTable
+from .models import TreeTable, Node
 from .serializers import TreeTableSerializer
 
 
-class TableTreeList(APIView):
+class TreeTableList(APIView):
     def get(self, request):
-        tableTrees = TableTree.objects.filter(owner=request.user)
-        serializer = TreeTableSerializer(tableTrees, many=True)
+        treeTables = TreeTable.objects.filter(owner=request.user)
+        serializer = TreeTableSerializer(treeTables, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        TableTree.create(request.body["name"], request.body["owner"]).save()
+        # TODO: Validate the body data
+        newT = TreeTable.create(
+            name=request.data["name"], owner=request.data["owner_id"])
+        newT.save()
+        serializer = TreeTableSerializer(newT)
+        return Response(serializer.data)
 
 
-class TableTreeDetail(APIView):
+class TreeTableDetail(APIView):
     def get_object(self, id):
         try:
             return TreeTable.objects.get(id=id)
-        except TableTree.DoesNotExist:
+        except TreeTable.DoesNotExist:
             raise Http404
 
     def get(self, request, id):
-        tableTree = self.get_object(id)
-        serializer = TreeTableSerializer(tableTree)
+        treeTable = self.get_object(id)
+        serializer = TreeTableSerializer(treeTable)
         return Response(serializer.data)
 
     def put(self, request, id):
-        tableTree = self.get_object(id)
+        treeTable = self.get_object(id)
         for operation in request.body:
             opKey = operation["opKey"]
-            node = tableTree.findById(operation["nodeId"])
+            node = treeTable.findById(operation["nodeId"])
             if opKey == "changeText":
                 node.text = operation["text"]
                 node.save()
@@ -49,6 +54,6 @@ class TableTreeDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request, id):
-        tableTree = self.get_object(id)
-        tableTree.delete()
+        treeTable = self.get_object(id)
+        treeTable.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
