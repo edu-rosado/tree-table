@@ -38,16 +38,28 @@ class TreeTableDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, id):
+        """
+        It accepts a list of operations to perform on the nodes of the tree
+        It is not transactional, so if a operation fails, the previous ops take effect
+            regardless and the remaining ops  will not execute
+        By sending a list of operations instead of sending the whole tree or sending
+            many individual operations, the api should scale better
+        """
         treeTable = self.get_object(id)
-        for operation in request.body:
-            opKey = operation["opKey"]
-            node = treeTable.findById(operation["nodeId"])
-            if opKey == "changeText":
+        for operation in request.data:
+            opKey = operation["op_key"]
+            node = treeTable.findById(operation["node_id"])
+            if opKey == "change_text":
+                if node.is_root:
+                    raise SuspiciousOperation(
+                        "You cannot change the state of a root node")
                 node.text = operation["text"]
                 node.save()
-            elif opKey == "addChild":
+            elif opKey == "add_child":
                 Node(parent=node, text=operation["text"]).save()
             elif opKey == "delete":
+                if node.is_root:
+                    raise SuspiciousOperation("You cannot delete a root node")
                 node.delete()
             else:
                 raise SuspiciousOperation("Invalid request")
