@@ -1,0 +1,26 @@
+.action-bar {
+  background-color: lightcoral;
+  height: 5vh;
+  display: flex;
+
+  .topbar-btn {
+    height: 100%;
+    padding: 0 1rem;
+  }
+  .dropdown-items > button {
+    padding: 1rem;
+  }
+}
+
+.dropdown-container {
+  position: relative;
+  .dropdown-items {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    &.active {
+      display: flex;
+      max-width: 500px;
+    }
+  }
+}

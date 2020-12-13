@@ -174,3 +174,4 @@ sketch
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+client/react-app/.eslintcache

@@ -140,7 +140,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': dt.timedelta(minutes=5000),
+    'ACCESS_TOKEN_LIFETIME': dt.timedelta(days=7000),
     'REFRESH_TOKEN_LIFETIME': dt.timedelta(days=7000),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,

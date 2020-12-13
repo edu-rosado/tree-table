@@ -1,5 +1,30 @@
+/* Variables and such */
+@import "variables";
+
+/* General styles */
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
+
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 110vh;
+}
+
+button {
+  border: none;
+  background-color: lightcyan;
+  cursor: pointer;
+  &:hover {
+    background-color: lightblue;
+    box-shadow: 0 0 10px lightblue;
+  }
+}
+
+/* Partials */
+@import "top_bar";
+@import "action_bar";
+@import "data_section";
