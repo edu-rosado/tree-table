@@ -48,7 +48,10 @@ class TreeTableDetail(APIView):
         treeTable = self.get_object(id)
         for operation in request.data:
             opKey = operation["op_key"]
-            node = treeTable.findById(operation["node_id"])
+            try:
+                node = Node.objects.get(operation["node_id"])
+            except:
+                raise Http404
             if opKey == "change_text":
                 if node.is_root:
                     raise SuspiciousOperation(
@@ -56,8 +59,9 @@ class TreeTableDetail(APIView):
                 node.text = operation["text"]
                 node.save()
             elif opKey == "add_child":
-                Node(parent=node, text=operation["text"]).save()
+                treeTable.addNode(text=operation["text"], parentNode=node)
             elif opKey == "delete":
+                treeTable.deleteNode(targetNode=node)
                 if node.is_root:
                     raise SuspiciousOperation("You cannot delete a root node")
                 node.delete()
