@@ -1,10 +1,25 @@
 .data-section {
-  background-color: green;
+  background-color: lightsalmon;
   height: 95vh;
-  display: grid;
 }
 
-.grid-block {
-  display: flex;
-  align-items: center;
+.grid {
+  display: grid;
+  row-gap: 0.2rem;
+  column-gap: 0.2rem;
+
+  .header-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.8rem 0;
+    background-color: darken(lightsalmon, 10%);
+  }
+
+  .grid-block {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.3rem;
+    background-color: lightgoldenrodyellow;
+  }
 }

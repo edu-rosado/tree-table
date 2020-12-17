@@ -3,11 +3,12 @@ import useLocalStorage from '../../hooks/useLocalStorage'
 import axios from 'axios'
 import { getRequestHeaders, parseJwt, tableToGridBlock, treeToTable } from '../../utils';
 import GridBlock from './GridBlock';
+import HeaderItem from './HeaderItem';
 
-const current_tt_id = 2;
+const current_tt_id = 4;
 const token_debug = {
-    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MjIxMjY3MjQzMSwianRpIjoiNWY1ZTBiMDI2ZTJmNDg2NTlhYzc3OGVmZDQzZmY1NDkiLCJ1c2VyX2lkIjoxfQ.bG-fIRQVwhvny3WahGD_4oMSEaSimBzAGOWZnXVzuUE",
-    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyMjEyNjcyNDMxLCJqdGkiOiJjMWQ3NDhjMjRkMGM0YWIwODM5NGQ3NWJmYjNlY2Y0MyIsInVzZXJfaWQiOjF9.VGk87aS9_xErG6h7kA3q7rX062IzH12pmu2W1nIUleY"
+    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MjIxMzA0MDUyNSwianRpIjoiNmVjZmQ2NGFjMTRlNDVhNTg1ZDU0OWU4MmU0YWM3MjIiLCJ1c2VyX2lkIjoxfQ.CiBVpTgPza8sAGeYckcQzvkKAw7Lhfn6s3vRhRyNob0",
+    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyMjEzMDQwNTI1LCJqdGkiOiIwNjUxNjc5ZDE1ZTc0OGNhOTBiYTM5NTNhYWZiNWM0MyIsInVzZXJfaWQiOjF9.TFWp50b8A1u9qLOi8jLhn_3lrHX3uqozAD6b7Np-8kM"
 }
 
 export default function DataSection() {
@@ -56,22 +57,28 @@ export default function DataSection() {
                 // TODO: re-login?
             })
         } else{
-            setGridBlocks(tableToGridBlock(...treeToTable(treeTable)))
+            const [table, depth] = treeToTable(treeTable)
+            setGridBlocks(tableToGridBlock(table, depth))
         }
     }, [treeTable])
     
     return (
         <div className="data-section">
-            {gridBlocks.length === 0 ? "" : (
-                gridBlocks.map((data,index) => (
-                    <GridBlock
-                        key={index} 
-                        x={data.x}
-                        yStart={data.yStart}
-                        yEnd={data.yEnd}
-                        text={data.text}/>
-                ))
-            )}
+            <div className="grid">
+                {treeTable.headers.map((head_text, lv) => (
+                    <HeaderItem text={head_text} lv={lv}/>
+                ))}
+                {gridBlocks.length === 0 ? "" : (
+                    gridBlocks.map((data,index) => (
+                        <GridBlock
+                            key={index} 
+                            x={data.x}
+                            yStart={data.yStart}
+                            yEnd={data.yEnd}
+                            text={data.text}/>
+                    ))
+                )}
+            </div>
         </div>
     )
 }

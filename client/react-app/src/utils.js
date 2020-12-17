@@ -21,13 +21,17 @@ export const parseJwt = (token) => {
 export const treeToTable = (tree) => {
     const depth = getTreeDepth(tree)
     let table = []
-    auxTreeToTable(tree.jsonRepr, table, [], depth)
+    tree.jsonRepr.children.forEach(child => {
+        auxTreeToTable(
+            child, table, [], depth
+        )
+    })
     return [table, depth]
 } 
 
 const auxTreeToTable = (node, table, currentRow, maxDepth) => {
     const row = [...currentRow, node.text]
-    if (node.children.length == 0){
+    if (node.children.length === 0){
         // Leaf, lets append a row
         while (row.length < maxDepth){
             row.push("")
@@ -54,14 +58,15 @@ export const tableToGridBlock = (table, depth) => {
                 if (y === 0 || newText !== currentText){
                     blocks.push({
                         x: x+1,
-                        yStart: y+1,
-                        yEnd: y+2,
+                        yStart: y+2,
+                        yEnd: y+3,
                         text: newText
                     })
                 } else{
-                    blocks[-1]["yEnd"] = blocks[-1]["yEnd"] + 1
+                    blocks[blocks.length-1]["yEnd"]++
                 }
             }
+            currentText = newText
         }
     }
     return blocks
@@ -73,7 +78,7 @@ export const getTreeDepth = (tree) => {
 
 const auxGetTreeDepth = (node, currentLen) => {
     currentLen++
-    if (node.children.length == 0) return currentLen
+    if (node.children.length === 0) return currentLen
     else{
         return node.children.reduce((currentmax, child) => {
             return Math.max(
