@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.http import Http404
 from django.core.exceptions import SuspiciousOperation
@@ -59,7 +60,9 @@ class TreeTableDetail(APIView):
                 node.text = operation["text"]
                 node.save()
             elif opKey == "add_child":
-                treeTable.addNode(text=operation["text"], parentNode=node)
+                new_node_id = treeTable.addNode(
+                    text=operation["text"], parentNode=node)
+                return JsonResponse({"id": new_node_id})
             elif opKey == "delete":
                 treeTable.deleteNode(targetNode=node)
                 if node.is_root:

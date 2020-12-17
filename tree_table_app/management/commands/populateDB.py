@@ -7,26 +7,22 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         TreeTable.objects.all().delete()
-        # Node.objects.all().delete()
 
         admin = User.objects.get(username="admin")
         t1 = TreeTable.create(name="t1", owner=admin)
         t1.save()
 
-        n1 = Node(parent=t1.root, text="n1")
-        n1.save()
+        n1_id = t1.addNode(text="n1", parentNode=t1.root)
+        n11_id = t1.addNode(text="n11", parentNode=n1_id)
+        n111_id = t1.addNode(text="n111", parentNode=n11_id)
+        n112_id = t1.addNode(text="n112", parentNode=n11_id)
 
-        n2 = Node(parent=t1.root, text="n2")
-        n2.save()
-        n21 = Node(parent=n2, text="n21")
-        n21.save()
-        n22 = Node(parent=n2, text="n22")
-        n22.save()
+        n2_id = t1.addNode(text="n2", parentNode=t1.root)
 
-        n3 = Node(parent=t1.root, text="n3")
-        n3.save()
+        n3_id = t1.addNode(text="n3", parentNode=t1.root)
+        n31_id = t1.addNode(text="n31", parentNode=n3_id)
+        n32_id = t1.addNode(text="n32", parentNode=n3_id)
 
         t2 = TreeTable.create(name="t2", owner=admin)
         t2.save()
-        t2n1 = Node(parent=t2.root, text="t2n1")
-        t2n1.save()
+        t2_n1 = t2.addNode(text="t2_n1", parentNode=t2.root)

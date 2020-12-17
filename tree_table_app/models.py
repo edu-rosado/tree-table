@@ -74,7 +74,7 @@ class TreeTable(models.Model):
     def addNode(self, text, parentNode):
         if type(parentNode) == int:
             try:
-                parentNode = Node.objects.get(parentNode)
+                parentNode = Node.objects.get(id=parentNode)
             except:
                 raise Http404
         if parentNode.getLevel() == self.depth:
@@ -83,6 +83,7 @@ class TreeTable(models.Model):
             self.save()
         newNode = Node(text=text, parent=parentNode)
         newNode.save()
+        return newNode.id
 
     def deleteNode(self, targetNode):
         if type(targetNode) == int:
