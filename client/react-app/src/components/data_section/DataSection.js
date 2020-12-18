@@ -17,6 +17,7 @@ export default function DataSection() {
     
     const [treeTable, setTreeTable] = useLocalStorage("treeTable", null)
     const [tokens, setTokens] = useLocalStorage("tokens", token_debug)
+    const [columnsWidth, setColumnsWidth] = useLocalStorage("columnsWidth", [])
 
     // TOKENS
     useEffect(() => {
@@ -52,6 +53,9 @@ export default function DataSection() {
                 
             ).then(res => {
                 setTreeTable(res.data)
+                setColumnsWidth(res.data.headers.map(header => (
+                    (9 + header.length) / 1.8
+                )))
             }).catch(err => {
                 console.log(err.response)
                 // TODO: re-login?
@@ -61,12 +65,21 @@ export default function DataSection() {
             setGridBlocks(tableToGridBlock(table, depth))
         }
     }, [treeTable])
-    
+
     return (
         <div className="data-section">
-            <div className="grid">
-                {treeTable.headers.map((head_text, lv) => (
-                    <HeaderItem text={head_text} lv={lv}/>
+            <div className="grid"
+                style={{gridTemplateColumns: columnsWidth.map(
+                    w => `${w.toString()}rem`
+                ).join(" ")}}
+            >
+                {treeTable === null ? "" : 
+                treeTable.headers.map((head_text, lv) => (
+                    <HeaderItem
+                        key={lv} 
+                        text={head_text}
+                        lv={lv}
+                        setColumnsWidth={setColumnsWidth}/>
                 ))}
                 {gridBlocks.length === 0 ? "" : (
                     gridBlocks.map((data,index) => (
